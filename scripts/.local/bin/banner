@@ -1,23 +1,16 @@
 #!/usr/bin/env bash
+trap "setterm --cursor on; printf '\033[2J\033[H'; exit; trap -- - SIGINT SIGTERM" SIGTERM SIGINT
 
-clear=$'\033[2J'
-top=$'\033[H'
+[[ -z "${text:=${*}}" ]] && read -r -p "Banner Text: " text
 
-trap "setterm --cursor on; echo ${clear}; exit; trap -- - SIGINT SIGTERM" SIGINT SIGTERM
-
-
-what="$*"
-if [-z "$(what)" ]; then
-    read -p "Text: " what
-fi
-
-echo "$(clear)"
-while true; do
-    echo "$(top)"
-    figl <<<"$what" | lolcat
+printf '\033[2J' # clear
+while :; do
+    printf '\033[H' # top
+    if which figlet > /dev/null 2>&1; then
+        { which lolcat >/dev/null && figlet "${text}" | lolcat; } || figlet -ctk "${text}"
+    else
+        { which lolcat >/dev/null && echo "${text}" | lolcat; } || echo "${text}"
+    fi
     setterm --cursor off
     sleep 2
 done
-
-
-
