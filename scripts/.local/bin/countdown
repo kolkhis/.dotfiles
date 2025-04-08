@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# declare -i TIMER
+# while [[ -n $1 ]]; do
+#     case $1 in
+#         -t|--time)
+#             [[ -n $2 ]] && shift && TIMER=$1;
+#             ;;
+#         *)
+#             TIMER=$1;
+#             ;;
+#     esac
+#     :
+# done
+# while [[ $TIMER > -1 ]]; do
+#     printf "%s" "$TIMER" | figlet-figlet;
+#     TIMER=(( $TIMER - 1 ));
+# done
+
+trap "setterm --cursor on; printf '\033[2J\033[H'; exit; trap -- - SIGINT SIGTERM" SIGTERM SIGINT EXIT
+
+declare -i TIMER
+[[ -z "${TIMER:=${*}}" ]] && read -r -p "Set Timer: " TIMER
+
+
+printf '\033[2J' # clear
+while [[ $TIMER -ge 0 ]]; do
+    printf '\033[2J' # clear
+    printf '\033[H' # top
+    if which figlet > /dev/null 2>&1; then
+        { which lolcat >/dev/null && figlet "${TIMER}" | lolcat; } || figlet -ctk "${TIMER}"
+    else
+        { which lolcat >/dev/null && printf "%s" "${TIMER}" | lolcat; } || printf "%s" "${TIMER}"
+    fi
+    setterm --cursor off
+    (( TIMER-- ));
+    sleep 1;
+done
+printf '\033[2J\033[H'
+printf "Timer Complete!\n" | figlet | lolcat
+sleep 2;
