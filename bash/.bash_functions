@@ -135,3 +135,5 @@ m() {
         nvim -c "tab Man $1" -c "normal gt" -c "wincmd q"
     fi
 }
+complete -A command m
+
