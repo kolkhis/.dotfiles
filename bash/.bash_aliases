@@ -21,7 +21,7 @@ alias gs="git status -s"
 
 alias tmux='tmux -f "${XDG_CONFIG_HOME}/tmux/.tmux.conf"'
 alias "??"="gpt"
-alias "?"="duck"
+alias "?"="ddg"
 alias py="python3"
 alias python="python3"
 alias pythong="python3"
