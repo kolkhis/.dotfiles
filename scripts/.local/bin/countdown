@@ -1,22 +1,5 @@
 #!/bin/bash
 
-# declare -i TIMER
-# while [[ -n $1 ]]; do
-#     case $1 in
-#         -t|--time)
-#             [[ -n $2 ]] && shift && TIMER=$1;
-#             ;;
-#         *)
-#             TIMER=$1;
-#             ;;
-#     esac
-#     :
-# done
-# while [[ $TIMER > -1 ]]; do
-#     printf "%s" "$TIMER" | figlet-figlet;
-#     TIMER=(( $TIMER - 1 ));
-# done
-
 trap "setterm --cursor on; printf '\033[2J\033[H'; exit; trap -- - SIGINT SIGTERM" SIGTERM SIGINT EXIT
 
 declare -i TIMER
@@ -39,3 +22,4 @@ done
 printf '\033[2J\033[H'
 printf "Timer Complete!\n" | figlet | lolcat
 sleep 2;
+
