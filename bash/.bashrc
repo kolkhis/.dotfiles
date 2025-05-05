@@ -109,6 +109,7 @@ export CDPATH='.:~:~/.dotfiles/nvim/.config/:~/notes:~/Repos/github.com/kolkhis:
 export SCREENRC="$HOME/.config/.screenrc"
 
 ################################## PS1 ##################################
+
 # Python: Prevent default "(venv)" text
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 YELLOW='\[\e[38;5;214m\]'
@@ -120,15 +121,11 @@ RED_256="\[\e[38;5;160m\]"
 RESET="\[\e[0m\]"
 LIGHT_PURPLE="\[\e[38;5;99m\]"
 SOFT_PINK="\[\e[38;5;212m\]"
-# LIGHT_BLUE="\[\e[38;5;81m\]"
-# SOFT_BLUE="\[\e[38;5;111m\]"
-# BEIGE='\[\e[38;5;180m\]'
-# SOFT_PURPLE="\[\e[38;5;61m\]"
 DARK_RED="\[\e[38;5;88m\]"
 SEP_COLOR=${DARK_RED}
 FIRST_SEP="┎"  # ┎┏┍ ┏ ┒ ┒┎ ┏ ┍
-SECOND_SEP="┖" # ┖┗┕ ┖ ┚ ┨┠ ┣ ┝ ┫┠
-#         ┚┖ ┗ ┕
+SECOND_SEP="┖" # ┖┗┕ ┖ ┚ ┨┠ ┣ ┝ ┫┠ ┚┖ ┗ ┕
+
 case $USER in
     root)
         NAME_COLOR=${RED_256}
@@ -153,43 +150,38 @@ set_prompt() {
         SEP_COLOR="\[\e[38;5;88m\]"
     fi
     if [[ -f ~/.bash_functions ]]; then
-        PS1="${SEP_COLOR}${FIRST_SEP} \
-${NAME_COLOR}\
-\u${GREY}@\
-${HOST_COLOR}\
-\h${GREY}:\
-${PATH_COLOR}\
-\$(pwd_shortened)\
-${RED_256}\
-\$(get_git_branch)\
-\n${SEP_COLOR}${SECOND_SEP} \
-${VENV_COLOR}\$(check_venv)\
-${GREY}\\$ ${RESET}"
+        export PROMPT_DIRTRIM=2
+        PS1="${SEP_COLOR}${FIRST_SEP} " 
+        PS1="${PS1}${NAME_COLOR}\u"
+        PS1="${PS1}${GREY}@"
+        PS1="${PS1}${HOST_COLOR}\h"
+        PS1="${PS1}${GREY}:"
+        PS1="${PS1}${PATH_COLOR}\w"
+        # PS1="${PS1}""\$(pwd_shortened)"
+        PS1="${PS1}${RED_256}\$(get_git_branch)"
+        PS1="${PS1}\n${SEP_COLOR}${SECOND_SEP} "
+        PS1="${PS1}${VENV_COLOR}\$(check_venv)"
+        PS1="${PS1}${GREY}\\$ ${RESET}"
+
+
     else
-        PS1="${SEP_COLOR}${FIRST_SEP} \
-${NAME_COLOR}\
-\u${GREY}@\
-${HOST_COLOR}\
-\h${GREY}:\
-${PATH_COLOR}\
-${RED_256}\
-\n${SEP_COLOR}${SECOND_SEP} \
-${VENV_COLOR}\$(check_venv)\
-${GREY}\\$ ${RESET}"
+        export PROMPT_DIRTRIM=2
+        PS1="${SEP_COLOR}${FIRST_SEP} " 
+        PS1="$PS1""${NAME_COLOR}\u"
+        PS1="$PS1""${GREY}@"
+        PS1="$PS1""${HOST_COLOR}\h"
+        PS1="$PS1""${GREY}:"
+        PS1="$PS1""${PATH_COLOR}\w"
+        PS1="$PS1""${RED_256}"
+        PS1="$PS1""\n${SEP_COLOR}${SECOND_SEP} "
+        PS1="$PS1""${GREY}\\$ ${RESET}"
     fi
 }
-# \W\
 
-# TODO: Rewrite this logic to utilize OSTYPE
-# pwd_shortened:  sed -E 's/.*\/(.*\/.*$)/\1/' 2>/dev/null
 # different prompt for git bash
-case $(hostname) in
-    "D01")
-        if echo "$ORIGINAL_PATH" | grep mingw >/dev/null 2>&1; then
-            source /etc/profile.d/git-prompt.sh
-        else
-            set_prompt
-        fi
+case $OSTYPE in
+    *msys*)
+        { [[ -f /etc/profile.d/git-prompt.sh ]] && \. /etc/profile.d/git-prompt.sh; } || set_prompt
         ;;
     *)
         set_prompt
@@ -197,6 +189,7 @@ case $(hostname) in
 esac
 export PS1
 export PS2="${GREY}~>${RESET} "
+
 
 ################################## Shell Options ##################################
 # omit duplicate lines or lines starting with space
