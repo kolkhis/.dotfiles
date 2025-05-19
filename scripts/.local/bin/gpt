@@ -1,20 +1,28 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-_have() { type "$1" &>/dev/null; }
+_has() { type "$1" > /dev/null 2>&1; }
+
 
 declare OPENAI_API_KEY
 OPENAI_API_KEY="$(head -1 "$HOME/.config/gpt/token")"
 export OPENAI_API_KEY
 
-! _have mods && echo "requires charmbracelet/mods" && exit 1
+! _has mods && printf >&2 "Error! Requires charmbracelet/mods\n" && exit 1
 
-if test -t 0; then
-  if _have glow; then
-    mods --status-text "Ummm" -f "$*" | glow
-  else
-    mods --status-text "Ummm" "$*"
-  fi
+if [[ -t 0 ]]; then
+    if _has glow; then
+        mods --status-text "Thinking." -f "$*" | glow || {
+            printf >&2 "Error! Failed to call mods.\n" && exit 1
+        }
+    else
+        mods --status-text "Thinking." "$*" || {
+            printf >&2 "Error! Failed to call mods.\n" && exit 1
+        }
+    fi
 else
-  mods --quiet "$*" | sed 's,[?25l [0D[2K[?25h[?1002l[?1003l,,g'
-  # |sed 's/\x1B\[[0-9;\?]*[a-zA-Z]//g'
+    mods --quiet "$*" | sed 's,[?25l [0D[2K[?25h[?1002l[?1003l,,g' || {
+        printf >&2 "Error! Failed to call mods.\n" && exit 1
+    }
+    # |sed 's/\x1B\[[0-9;\?]*[a-zA-Z]//g'
 fi
+
