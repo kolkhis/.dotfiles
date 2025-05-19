@@ -1,0 +1,34 @@
+#!/bin/bash
+
+declare -i IBASE
+declare -i INPUT_NUMBER
+
+while [[ -n $1 ]]; do
+    case $1 in
+        -h|--help)
+            printf "Enter a number to convert to binary.\n"
+            printf "Use -o to convert an octal (base8) number to binary.\n"
+            printf "Use -d/--decimal to convert a decimal (base10) number to binary (default).\n"
+            exit 0;
+            ;;
+        -d|--decimal)
+            IBASE=10
+            shift;
+            ;;
+        -o|--octal)
+            IBASE=8
+            shift;
+            ;;
+        *)
+            break
+            ;;
+    esac
+done
+
+[[ -n $1 ]] && INPUT_NUMBER=$1
+[[ -z $1 ]] && read -r -p "Enter base10 number to conver to binary: " INPUT_NUMBER
+
+printf "ibase=%s;obase=2; %s \n" "${IBASE:-10}" "$INPUT_NUMBER" | bc || {
+    printf >&2 "Failed to convert input number to binary: %s\n" "$INPUT_NUMBER"
+}
+
