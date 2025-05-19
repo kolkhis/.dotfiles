@@ -5,6 +5,7 @@ trap "setterm --cursor on; printf '\033[2J\033[H'; exit; trap -- - SIGINT SIGTER
 declare -i TIMER
 [[ -z "${TIMER:=${*}}" ]] && read -r -p "Set Timer: " TIMER
 
+# TODO: Add text (e.g., "Starting In: ")
 
 printf '\033[2J' # clear
 while [[ $TIMER -ge 0 ]]; do
