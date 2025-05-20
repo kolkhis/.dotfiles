@@ -227,3 +227,6 @@ export GPG_TTY
 export PATH=$PATH:/usr/local/go/bin
 export CGO_ENABLED=0
 export GO111MODULE=on
+
+# Make sure cursor is a block
+printf "\x1b[\x30 q"
