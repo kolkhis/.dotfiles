@@ -61,7 +61,7 @@ touch ~/.config/git/allowed_signers || {
     printf >&2 "Failed to create file ~/.config/git/allowed_signers\n" && exit 1
 }
 
-echo "${GH_USERNAME} $(cat "$KEYFILE")" > ~/.config/git/allowed_signers || {
+printf "%s %s\n" "${GH_USERNAME}" "$(cat "$KEYFILE")" | tee -a ~/.config/git/allowed_signers || {
     printf >&2 "Failed to add %s as an allowed signer with the key %s\n" "${GH_USERNAME}" "${KEYFILE}" && exit 1
 }
 
