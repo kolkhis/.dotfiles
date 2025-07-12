@@ -137,3 +137,49 @@ m() {
 }
 complete -A command m
 
+# cp-chroot() {
+#     # Copy binary and its linked libraries to a chroot directory
+#     local file
+#     local dest
+#     local CHROOT_DIR='/var/chroot'
+#     [[ -z $1 || -z $2 ]] && printf >&2 "File or destination empty!\n" && return 1
+#     file=$1 && shift
+#     dest=$1 && shift
+#     while [[ -n $1 ]]; do
+#         case $1 in 
+#             -c|--chroot-dir)
+#                 CHROOT_DIR=$1
+#                 shift
+#                 ;;
+#             *)
+#                 ;;
+#         esac
+#     done
+#     sudo cp "$file" "$dest" || {
+#         printf >&2 "Failed to copy %s to %s\n" "$file" "$dest" && return 1
+#     }
+#     for lib in $(ldd "$file" | grep -o '/[^ ]*'); do
+#         sudo cp "${lib}" "${CHROOT_DIR}${lib}" || {
+#             printf >&2 "Failed to copy linked library %s to %s\n" "$lib" "$CHROOT_DIR$lib" && return 1
+#         }
+#     done
+# }
+
+tmux-breakw(){
+    # break-pane ‘#{session_name}:#{window_index}.#{pane_index}’
+    local src_window
+    local window_name
+    local new_session_name
+
+    src_window=$(tmux display-message -p '#{session_name}:#{window_index}')
+    window_name=$(tmux display-message -p '#{window_name}')
+
+    [[ -n $1 ]] && new_session_name=$1
+    printf "Creating new session: %s\n" "${new_session_name:=${window_name// /-}}"
+
+    tmux break-pane -d \
+        -s "$src_window" \
+        -n "$window_name" \
+        -t "${window_name// /-}"
+}
+
