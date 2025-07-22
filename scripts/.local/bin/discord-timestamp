@@ -1,0 +1,65 @@
+#!/bin/bash
+
+declare DATE
+declare TIME
+declare INPUT
+declare FORMAT
+# CURRENT_DATE=$(date --iso-8601='minutes' | perl -p -e 's/([-\d]+?)T([:\d]+?)-.*/\1 \2/')
+CURRENT_DATE=$(date '+%F %R')
+
+printf "Current date: %s\n" "$CURRENT_DATE"
+
+while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
+    case $1 in
+        -h|--help)
+            cat <<- EOF
+			Code	Format
+			t	    Short time (9:00 AM)
+			T	    Long time (9:00:00 AM)
+			d	    Short date (08/09/2024)
+			D	    Long date (August 9, 2024)
+			f	    Short date/time (August 9, 2024 9:00 AM)
+			F	    Long date/time (Friday, August 9, 2024 9:00 AM)
+			R	    Relative (in 2 days)
+			EOF
+            shift;
+            exit 0;
+            ;;
+
+        -f|--format)
+            { [[ -n $2 && ! $2 =~ ^- ]] && shift; } || {
+                printf >&2 "Invalid or missing argument to -f|--format! Exiting.\n"; exit 1; }
+            if ! [[ $1 =~ ^[ftdFTDR]$ ]]; then
+                printf "Use --format to specify the format the date should have in discord.\n"
+                printf "Usage: -D | --display [f|t|d|D|f|F|R]\n"
+                printf "See --help for list of options and what they look like.\n"
+                exit 1;
+            fi
+            FORMAT=$1
+            shift;
+            ;;
+        *)
+            printf "Unknown argument: %s\nUse --help for usage.\n" "$1"
+            exit 1
+            ;;
+    esac
+done
+
+[[ -n $1 && -n $2 ]] &&
+    DATE=$1 && TIME=$2 &&
+    INPUT=$(printf "%s %s\n" "$DATE" "$TIME" | perl -pe 's/([-\d]+) ([:\d]+).*/\1 \2/')
+        # perl -p -e 's/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}).*/\1 \2/');
+
+[[ -z $INPUT ]] &&
+    printf "No input provided. Using the current date/time (%s).\n" "${INPUT:=$CURRENT_DATE}"
+
+printf "Calculating Discord timestamp for: %s\n" "${INPUT}"
+
+EPOCH=$(date -d "${INPUT}" +%s 2>/dev/null)
+[[ -z $EPOCH ]] && {
+    printf "Failed to calculate the epoch time for the given date.\n"
+    exit 1
+}
+
+printf "<t:%s:%s>\n" "${EPOCH}" "${FORMAT:=f}"
+
