@@ -45,9 +45,11 @@ while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
     esac
 done
 
+[[ $1 == '--' ]] && shift;
+
 [[ -n $1 && -n $2 ]] &&
     DATE=$1 && TIME=$2 &&
-    INPUT=$(printf "%s %s\n" "$DATE" "$TIME" | perl -pe 's/([-\d]+) ([:\d]+).*/\1 \2/')
+    INPUT=$(perl -pe 's/([-\d]+)\s+([:\d]+).*/\1 \2/' <<< "$DATE $TIME")
         # perl -p -e 's/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}).*/\1 \2/');
 
 [[ -z $INPUT ]] &&
