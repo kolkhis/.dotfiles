@@ -31,7 +31,7 @@ while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
                 printf >&2 "Invalid or missing argument to -f|--format! Exiting.\n"; exit 1; }
             if ! [[ $1 =~ ^[ftdFTDR]$ ]]; then
                 printf "Use --format to specify the format the date should have in discord.\n"
-                printf "Usage: -D | --display [f|t|d|D|f|F|R]\n"
+                printf "Usage: -f | --format [f|t|d|D|f|F|R]\n"
                 printf "See --help for list of options and what they look like.\n"
                 exit 1;
             fi
