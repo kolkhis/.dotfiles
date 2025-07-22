@@ -112,19 +112,20 @@ export SCREENRC="$HOME/.config/.screenrc"
 
 # Python: Prevent default "(venv)" text
 export VIRTUAL_ENV_DISABLE_PROMPT=1
-YELLOW='\[\e[38;5;214m\]'
-BURNT_ORANGE='\[\e[38;5;130m\]'
-DARK_YELLOW="\[\e[38;5;58m\]"
-GREY='\[\e[38;5;241m\]'
-MUTED_BLUEGREEN="\[\e[38;5;30m\]"
-RED_256="\[\e[38;5;160m\]"
-RESET="\[\e[0m\]"
-LIGHT_PURPLE="\[\e[38;5;99m\]"
-SOFT_PINK="\[\e[38;5;212m\]"
-DARK_RED="\[\e[38;5;88m\]"
+
+YELLOW=$'\e[38;5;214m'
+BURNT_ORANGE=$'\e[38;5;130m'
+DARK_YELLOW=$'\e[38;5;58m'
+GREY=$'\e[38;5;241m'
+MUTED_BLUEGREEN=$'\e[38;5;30m'
+RED_256=$'\e[38;5;160m'
+RESET=$'\e[0m'
+LIGHT_PURPLE=$'\e[38;5;99m'
+SOFT_PINK=$'\e[38;5;212m'
+DARK_RED=$'\e[38;5;88m'
 SEP_COLOR=${DARK_RED}
-FIRST_SEP="┎"  # ┎┏┍ ┏ ┒ ┒┎ ┏ ┍
-SECOND_SEP="┖" # ┖┗┕ ┖ ┚ ┨┠ ┣ ┝ ┫┠ ┚┖ ┗ ┕
+FIRST_SEP=$'┎'  # ┎┏┍ ┏ ┒ ┒┎ ┏ ┍
+SECOND_SEP=$'┖' # ┖┗┕ ┖ ┚ ┨┠ ┣ ┝ ┫┠ ┚┖ ┗ ┕
 
 case $USER in
     root)
@@ -143,13 +144,13 @@ esac
 
 set_prompt() {
     if echo "$ORIGINAL_PATH" | grep 'cyg' >/dev/null 2>&1; then
-        SEP_COLOR="\[\e[38;5;95m\]"
-        NAME_COLOR="\[\e[38;5;61m\]"
-        PATH_COLOR="\[\e[38;5;24m\]"
+        SEP_COLOR=$'\e[38;5;95m'
+        NAME_COLOR=$'\e[38;5;61m'
+        PATH_COLOR=$'\e[38;5;24m'
     else
-        SEP_COLOR="\[\e[38;5;88m\]"
+        SEP_COLOR=$'\e[38;5;88m'
     fi
-    if [[ -f ~/.bash_functions ]]; then
+    if type get_git_branch check_venv >/dev/null 2>&1; then
         export PROMPT_DIRTRIM=2
         PS1="${SEP_COLOR}${FIRST_SEP} " 
         PS1="${PS1}${NAME_COLOR}\u"
@@ -219,6 +220,8 @@ export TERM=xterm-256color
 export NOTES_HOME="/home/kolkhis/notes"
 export LC_ALL=C.UTF-8
 export EDITOR=nvim
+export VISUAL=nvim
+export SUDO_EDITOR=nvim
 export PATH=~/bin:$PATH
 export COLUMNS=120 LINES=30
 GPG_TTY=$(tty)
