@@ -1,11 +1,13 @@
 #!/bin/bash
 
+# TODO: Accept only date or only time
+
 declare DATE
 declare TIME
 declare INPUT
 declare FORMAT
-# CURRENT_DATE=$(date --iso-8601='minutes' | perl -p -e 's/([-\d]+?)T([:\d]+?)-.*/\1 \2/')
-CURRENT_DATE=$(date '+%F %R')
+# CURRENT_DATE=$(date '+%F %R')
+CURRENT_DATE=$(date '+%Y-%m-%d %H:%M')  # POSIX-friendly
 
 printf "Current date: %s\n" "$CURRENT_DATE"
 
