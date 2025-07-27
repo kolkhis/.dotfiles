@@ -38,6 +38,7 @@ alias f='fzf'
 # Navigation
 alias dots="cd ~/.dotfiles/"
 alias aoc="cd ~/Repos/github.com/kolkhis/aoc-2023/"
+alias sb="cd ~/Repos/github.com/kolkhis/scripts-playbooks"
 alias nv="cd ~/.dotfiles/nvim/.config/nvim/"
 alias v="cd ~/.dotfiles/vim"
 alias boost="cd ~/notes/skilstak/" 
