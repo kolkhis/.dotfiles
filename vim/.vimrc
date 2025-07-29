@@ -246,6 +246,6 @@ if filereadable(expand("~/.vim/autoload/plug.vim"))
     call kolkhis#SetLightlineOptions()
 endif
 
-call kolkhis#SetColors()
-colorscheme onedark
-execute 'DM'
+silent! call kolkhis#SetColors()
+silent! colorscheme onedark
+silent! execute 'DM'
