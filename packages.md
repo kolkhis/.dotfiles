@@ -158,8 +158,10 @@ sh autogen.sh &&
 ```
 
 
-## Installing Other Packages (packages not up-to-date or unavailable on `apt`)
-* `charmbracelet/mods` (ChatGPT from the command line)
+## Installing Other Packages 
+Installation of packages either out-of-date or unavailable via `apt`: 
+
+* `charmbracelet/mods`
 ```bash
 sudo mkdir -p /etc/apt/keyrings
 curl -fsSL https://repo.charm.sh/apt/gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/charm.gpg
@@ -191,48 +193,7 @@ echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://
 sudo apt update && sudo apt install vault
 ```
 
-
-## Tools to check out
-* `parallel` (GNU Parallel) - Shell tool for executing jobs in parallel using one or more machines
-    * A job is typically a inslge command or small script that has to be run
-      for each line in the input.
-    * Typical input is a list of either files, hosts, users, or tables.
-* `KeePassXC` - Password manager or safe. Locked with one master key or key-disk.  
-* `traefik` - HTTP reverse proxy and load balancer that makes deploying microservices easy.  
-* `vault` - Product data management (PDM) tool. Integrates with CAD systems. Autodesk product.  
-* `Ncat` - What's the difference between `netcat` and `Ncat`?  
-* `sleuthkit` - File and filesystem analysis/forensics toolkit.
-* [`sherlock`](https://github.com/sherlock-project/sherlock) - User accounts on socials
-* `ranger` - a console file manager (vi hotkeys)
-* `btop` - Customizable TUI Resource monitor. See the [github](https://github.com/aristocratos/btop) page
-    * See [example btop.conf](https://github.com/aristocratos/btop?tab=readme-ov-file#configurability)
-    * Goes in `$XDG_CONFIG_HOME/btop/btop.conf` or `$HOME/.config/btop/btop.conf`
-* `pfsense` - A tool for authentication  
-* `OpenSCAP` - benchmarking tool  
-
-
-### Static site generator (available on pip):
-* mkdocs 
-* mkdocs-material
-* mkdocs-awesome-pages-plugin
-
-
-### Totally unrelated things to check out
-* L3MON - [Android Hax](https://www.golinuxcloud.com/l3mon-hack-android-mobile-remotely/)  
-* JuiceSSH - [SSH client for Android](https://juicessh.com/)  
-
-## Lavalink
-* Lavalink 
-    * [Lavalink.jar](https://github.com/lavalink-devs/Lavalink/releases)
-    * [Lavalink example application.yml](https://raw.githubusercontent.com/lavalink-devs/Lavalink/master/LavalinkServer/application.yml.example)
-    * [LavaSrc example application.yml](https://raw.githubusercontent.com/topi314/LavaSrc/master/application.example.yml)
-* Requires Java 17+ (not the default- apt packages):
-  ```bash
-  sudo apt install openjdk-17-jdk openjdk-17-jre
-  ```
-
 ## Package Install Script
-<!-- TODO: Make this cross-platform (for RH/dnf etc) -->
 ```bash
 #!/bin/bash
 
@@ -281,7 +242,7 @@ PACKAGES=(
     "software-properties-common"
 )
 
-sudo apt-get install -y "$(printf "%s " "${PACKAGES[@]}")"
+sudo apt-get install -y "${PACKAGES[@]}"
 
 # nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash 
@@ -290,8 +251,8 @@ sudo npm install -g pyright
 ```
 
 ## Installing Different Versions with `apt`
-On Debian-based distros, you can specify the version number while 
-installing with `apt`.
+On Debian-based distros, you can specify the version number with `=version` while 
+installing with `apt`:
 ```bash
 sudo apt install screen=4.5.0
 ```
