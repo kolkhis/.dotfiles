@@ -9,33 +9,33 @@ case $- in
 esac
 
 # make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+[[ -x /usr/bin/lesspipe ]] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
+if [[ -z "${debian_chroot:-}" ]] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
 fi
 
 # enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    if [ -r ~/.dircolors ]; then
+if [[ -x /usr/bin/dircolors ]]; then
+    if [[ -r ~/.dircolors ]]; then
         eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
     fi
 fi
 
-if [ -f ~/.bash_functions ]; then
+if [[ -f ~/.bash_functions ]]; then
     . ~/.bash_functions
 fi
 
-if [ -f ~/.bash_aliases ]; then
+if [[ -f ~/.bash_aliases ]]; then
     . ~/.bash_aliases
 fi
 
 # Enable programmable bash completion in interactive shells
 if ! shopt -oq posix; then
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
+    if [[ -f /usr/share/bash-completion/bash_completion ]]; then
         . /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
+    elif [[ -f /etc/bash_completion ]]; then
         . /etc/bash_completion
     fi
 fi
@@ -43,11 +43,11 @@ fi
 ################################## Env ##################################
 # nvm
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+[[ -s "$NVM_DIR/nvm.sh" ]] && \. "$NVM_DIR/nvm.sh"
+[[ -s "$NVM_DIR/bash_completion" ]] && \. "$NVM_DIR/bash_completion"
 
 # crablang
-[ -s "$HOME/.cargo/env" ] && \. "$HOME/.cargo/env"
+[[ -s "$HOME/.cargo/env" ]] && \. "$HOME/.cargo/env"
 
 # Set XDG_CONFIG_HOME/DATA on Linux if it's unset, add nvim to path if on windows
 case $OSTYPE in
@@ -57,8 +57,8 @@ case $OSTYPE in
         fi
         ;;
     *linux*)
-        [ -z "$XDG_CONFIG_HOME" ] && export XDG_CONFIG_HOME="${HOME}/.config"
-        [ -z "$XDG_DATA_HOME" ] && export XDG_DATA_HOME="${HOME}/.local/share"
+        [[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME="${HOME}/.config"
+        [[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME="${HOME}/.local/share"
 esac
 
 export FZF_DEFAULT_COMMAND='find . -type f ! -path "*/.git/*"'
@@ -113,19 +113,19 @@ export SCREENRC="$HOME/.config/.screenrc"
 # Python: Prevent default "(venv)" text
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-YELLOW=$'\e[38;5;214m'
-BURNT_ORANGE=$'\e[38;5;130m'
-DARK_YELLOW=$'\e[38;5;58m'
-GREY=$'\e[38;5;241m'
-MUTED_BLUEGREEN=$'\e[38;5;30m'
-RED_256=$'\e[38;5;160m'
-RESET=$'\e[0m'
-LIGHT_PURPLE=$'\e[38;5;99m'
-SOFT_PINK=$'\e[38;5;212m'
-DARK_RED=$'\e[38;5;88m'
+YELLOW="\[\e[38;5;214m\]"
+BURNT_ORANGE="\[\e[38;5;130m\]"
+DARK_YELLOW="\[\e[38;5;58m\]"
+GREY="\[\e[38;5;241m\]"
+MUTED_BLUEGREEN="\[\e[38;5;30m\]"
+RED_256="\[\e[38;5;160m\]"
+RESET="\[\e[0m\]"
+LIGHT_PURPLE="\[\e[38;5;99m\]"
+SOFT_PINK="\[\e[38;5;212m\]"
+DARK_RED="\[\e[38;5;88m\]"
 SEP_COLOR=${DARK_RED}
-FIRST_SEP=$'┎'  # ┎┏┍ ┏ ┒ ┒┎ ┏ ┍
-SECOND_SEP=$'┖' # ┖┗┕ ┖ ┚ ┨┠ ┣ ┝ ┫┠ ┚┖ ┗ ┕
+FIRST_SEP="┎"  # ┎┏┍ ┏ ┒ ┒┎ ┏ ┍
+SECOND_SEP="┖" # ┖┗┕ ┖ ┚ ┨┠ ┣ ┝ ┫┠ ┚┖ ┗ ┕
 
 case $USER in
     root)
@@ -216,7 +216,7 @@ set -o vi
 
 ################################## System Variables ##################################
 export TZ="America/New_York"
-export TERM=xterm-256color
+# export TERM=xterm-256color
 export NOTES_HOME="/home/kolkhis/notes"
 export LC_ALL=C.UTF-8
 export EDITOR=nvim
