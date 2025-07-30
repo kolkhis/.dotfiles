@@ -250,11 +250,3 @@ nvm install node
 sudo npm install -g pyright
 ```
 
-## Installing Different Versions with `apt`
-On Debian-based distros, you can specify the version number with `=version` while 
-installing with `apt`:
-```bash
-sudo apt install screen=4.5.0
-```
-
-
