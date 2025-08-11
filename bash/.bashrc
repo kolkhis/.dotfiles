@@ -144,12 +144,13 @@ esac
 
 set_prompt() {
     if echo "$ORIGINAL_PATH" | grep 'cyg' >/dev/null 2>&1; then
-        SEP_COLOR=$'\e[38;5;95m'
-        NAME_COLOR=$'\e[38;5;61m'
-        PATH_COLOR=$'\e[38;5;24m'
+        SEP_COLOR='\[\e[38;5;95m\]'
+        NAME_COLOR='\[\e[38;5;61m\]'
+        PATH_COLOR='\[\e[38;5;24m\]'
     else
-        SEP_COLOR=$'\e[38;5;88m'
+        SEP_COLOR='\[\e[38;5;88m\]'
     fi
+
     if type get_git_branch check_venv >/dev/null 2>&1; then
         export PROMPT_DIRTRIM=2
         PS1="${SEP_COLOR}${FIRST_SEP} " 
@@ -163,7 +164,6 @@ set_prompt() {
         PS1="${PS1}\n${SEP_COLOR}${SECOND_SEP} "
         PS1="${PS1}${VENV_COLOR}\$(check_venv)"
         PS1="${PS1}${GREY}\\$ ${RESET}"
-
 
     else
         export PROMPT_DIRTRIM=2
@@ -233,3 +233,4 @@ export GO111MODULE=on
 
 # Make sure cursor is a block
 printf "\x1b[\x30 q"
+
