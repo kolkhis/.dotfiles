@@ -1,21 +1,26 @@
 #!/bin/bash
 
-trap "setterm --cursor on; printf '\033[2J\033[H'; exit; trap -- - SIGINT SIGTERM" SIGTERM SIGINT EXIT
+trap "setterm --cursor on; printf '\033[2J\033[H'; exit; trap -- - SIGINT SIGTERM SIGHUP EXIT" \
+    SIGTERM SIGINT SIGHUP EXIT
 
-declare BANNER_TEXT
 declare -i TIMER
 declare MINUTE_FORMAT
-
-# TODO: Add text (e.g., "Starting In: ")
+declare BANNER_TEXT
 
 while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
     case $1 in
         -b|--banner)
-            [[ -n $2 && ! $2 =~ ^- ]] && shift && BANNER_TEXT=$1;
+            { [[ -n $2 && ! $2 =~ ^- ]] && shift && BANNER_TEXT=$1; } || {
+                printf >&2 "Bad/missing argument to -b/--banner.\n"
+                exit 1
+            }
             shift;
             ;;
         -t|--timer)
-            [[ -n $2 && ! $2 =~ ^- ]] && shift && TIMER=$1;
+            { [[ -n $2 && ! $2 =~ ^- ]] && shift && TIMER=$1; } || {
+                printf >&2 "Bad/missing argument to -t/--timer.\n"
+                exit 1
+            }
             shift;
             ;;
         -*)
@@ -33,7 +38,6 @@ done
 
 [[ -z "${TIMER:=${*}}" ]] && read -r -p "Set Timer: " TIMER
 
-
 _has_deps(){
     type figlet lolcat >/dev/null 2>&1 && return 0
     return 1
@@ -41,11 +45,12 @@ _has_deps(){
 
 _minutize(){
     local total="${TIMER}"
-    local minutes
-    local seconds
+    local -i minutes
+    local -i seconds
     minutes=$(( total / 60 ))
     seconds=$(( total % 60 ))
-    MINUTE_FORMAT=$(printf "%d : %02d\n" "$minutes" "$seconds")
+    # MINUTE_FORMAT=$(printf "%d : %02d\n" "$minutes" "$seconds")
+    printf -v MINUTE_FORMAT "%d : %02d\n" "$minutes" "$seconds"
 }
 
 
@@ -72,6 +77,7 @@ else
 fi
 
 printf '\033[2J\033[H'
-{ _has_deps && printf "Timer Complete!\n" | figlet | lolcat; } || printf "Timer complete!\n"
+{ _has_deps && printf "Timer Complete!\n" | figlet | lolcat; } ||
+    printf "Timer complete!\n"
 sleep 2;
-
+exit 0
