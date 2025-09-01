@@ -1,20 +1,16 @@
 # Package List for Ubuntu Server Workstation
 
+
 ## Table of Contents
 * [Getting Explicitly Installed Packages](#getting-explicitly-installed-packages) 
 * [Basic Tools](#basic-tools) 
 * [Programming](#programming) 
-    * [Needed for compiling Vim from source](#needed-for-compiling-vim-from-source) 
+    * [Packages needed for compiling Vim from source](#packages-needed-for-compiling-vim-from-source) 
 * [Other Packages](#other-packages) 
 * [Basic Package Installation](#basic-package-installation) 
 * [Building GNU Screen from Source](#building-gnu-screen-from-source) 
-* [Installing Other Packages (packages not up-to-date or unavailable on `apt`)](#installing-other-packages-(packages-not-up-to-date-or-unavailable-on-apt)) 
-* [Tools to check out](#tools-to-check-out) 
-    * [Static site generator (available on pip)](#static-site-generator-(available-on-pip)) 
-    * [Totally unrelated things to check out](#totally-unrelated-things-to-check-out) 
-* [Lavalink](#lavalink) 
+* [Installing Other Packages](#installing-other-packages) 
 * [Package Install Script](#package-install-script) 
-* [Installing Different Versions with `apt`](#installing-different-versions-with-apt) 
 
 
 ## Getting Explicitly Installed Packages
