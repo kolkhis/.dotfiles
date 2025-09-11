@@ -18,27 +18,21 @@ getcolor() {
 }
 
 RESET="\[\e[0m\]"
-parse_git_branch() {
-    branch="$(git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/')"
-    printf "%s${branch}%s" "" "${RESET}"
-}
 
 check_venv() {
-    if [[ -n "$VIRTUAL_ENV" ]]; then
-        venv_name=$(basename "$VIRTUAL_ENV")
-        printf "(%s) " "${venv_name}"
-    fi
+    [[ -n "$VIRTUAL_ENV" ]] && printf "(%s) " "${VIRTUAL_ENV##*/}"
 }
 
 get_git_branch() {
-    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+    # git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+    git branch -l 2>/dev/null | perl -ne 'print " ($1)" if m/^\*\s(.*)/'
 }
 
 shopts() {
     PAGER='less "+/^ *The list of shopt"' man bash
 }
 
-standardcolor() {
+standardcolors() {
     for i in {0..7}; do
         c=$'\e[3'${i}'m'
         printf "%sColor Code: %s\n" "$c" "$i"
@@ -55,26 +49,6 @@ soundbar() {
     else
         printf "Soundbar not found!\nTry one of these:\n%s" "$(pacmd list-sinks | grep "name:")";
     fi;
-}
-
-goto() {
-    d="$(dirname "$(which "$1")")"
-    printf "Going to %s. \n" "$d" && cd "$d" || return 1
-}
-
-mc() {
-    declare OPENAI_API_KEY
-    OPENAI_API_KEY="$(head -1 "$HOME/.config/gpt/token")"
-    export OPENAI_API_KEY
-    if test -t 0; then
-        if _have glow; then
-            mods -C --status-text "Ummm" -f "$*" | glow
-        else
-            mods -C --status-text "Ummm" "$*"
-        fi
-    else
-        mods -C --quiet "$*" | sed 's,[?25l [0D[2K[?25h[?1002l[?1003l,,g'
-    fi
 }
 
 pwd_shortened() {
