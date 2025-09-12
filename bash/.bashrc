@@ -3,7 +3,7 @@
 # /usr/share/doc/bash/examples/startup-files (in the package bash-doc) for examples
 
 # If not running interactively, don't do anything
-case $- in
+case "$-" in
     *i*) ;;
     *) return ;;
 esac
@@ -17,26 +17,19 @@ if [[ -z "${debian_chroot:-}" ]] && [ -r /etc/debian_chroot ]; then
 fi
 
 # enable color support of ls and also add handy aliases
-if [[ -x /usr/bin/dircolors ]]; then
-    if [[ -r ~/.dircolors ]]; then
-        eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    fi
+if [[ -x /usr/bin/dircolors && -r ~/.dircolors ]]; then
+    eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
 fi
 
-if [[ -f ~/.bash_functions ]]; then
-    . ~/.bash_functions
-fi
-
-if [[ -f ~/.bash_aliases ]]; then
-    . ~/.bash_aliases
-fi
+[[ -f ~/.bash_functions ]] && \. ~/.bash_functions
+[[ -f ~/.bash_aliases ]] && \. ~/.bash_aliases
 
 # Enable programmable bash completion in interactive shells
 if ! shopt -oq posix; then
     if [[ -f /usr/share/bash-completion/bash_completion ]]; then
-        . /usr/share/bash-completion/bash_completion
+        \. /usr/share/bash-completion/bash_completion
     elif [[ -f /etc/bash_completion ]]; then
-        . /etc/bash_completion
+        \. /etc/bash_completion
     fi
 fi
 
@@ -48,18 +41,6 @@ export NVM_DIR="$HOME/.nvm"
 
 # crablang
 [[ -s "$HOME/.cargo/env" ]] && \. "$HOME/.cargo/env"
-
-# Set XDG_CONFIG_HOME/DATA on Linux if it's unset, add nvim to path if on windows
-case $OSTYPE in
-    *msys*)
-        if ! echo "$PATH" | grep -qi -E 'neovim' > /dev/null 2>&1; then
-            export PATH="$PATH:/c/Program Files/Neovim/bin"
-        fi
-        ;;
-    *linux*)
-        [[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME="${HOME}/.config"
-        [[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME="${HOME}/.local/share"
-esac
 
 export FZF_DEFAULT_COMMAND='find . -type f ! -path "*/.git/*"'
 export FZF_DEFAULT_OPTS="\
@@ -79,32 +60,22 @@ export FZF_DEFAULT_OPTS="\
 --bind 'ctrl-\\:change-preview-window(bottom,70%,border-rounded|hidden|)' \
 "
 
-# cody
-if [[ -f "$HOME/.config/cody/endpoint" ]] && [[ -f "$HOME/.config/cody/token" ]]; then
-    declare SRC_ENDPOINT
-    declare SRC_ACCESS_TOKEN
-    SRC_ENDPOINT="$(head -1 "$HOME/.config/cody/endpoint")"
-    SRC_ACCESS_TOKEN="$(head -1 "$HOME/.config/cody/token")"
-    export SRC_ENDPOINT
-    export SRC_ACCESS_TOKEN
-fi
-
 # Colors
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 export GREP_COLORS=':ms=01;31:mc=01;31:sl=38;5;248:cx=38;5;244:fn=38;5;68:ln=38;5;81:bn=32:se=36'
 [[ -s "$HOME/.dircolors" ]] && eval "$(dircolors -b ~/.dircolors)"
 
-# Add colors to less output (TODO)
-# export LESS_TERMCAP_md=$'\e[33m'  # Start Bold
-# export LESS_TERMCAP_mb=$'\e[4m'   # Start Blinking
-# export LESS_TERMCAP_us=$'\e[10m'  # Start Underline 
-# export LESS_TERMCAP_so=$'\e[11m'  # Start Standout
-
 # -R is needed for the escape sequences
 export LESS="-FXR"
 
 # cdpath
-export CDPATH='.:~:~/.dotfiles/nvim/.config/:~/notes:~/Repos/github.com/kolkhis:~/notes/linux:~/notes/c:~/.dotfiles:~/.dotfiles/vim'
+declare -x CDPATH="."
+CDPATH="${CDPATH}:~"
+CDPATH="${CDPATH}:~/Repos/github.com/kolkhis"
+CDPATH="${CDPATH}:~/Repos/github.com/ProfessionalLinuxUsersGroup"
+CDPATH="${CDPATH}:~/notes"
+CDPATH="${CDPATH}:~/notes/linux"
+# export CDPATH='.:~:~/notes:~/Repos/github.com/kolkhis:~/Repos/github.com/ProfessionalLinuxUsersGroup:~/notes/linux:~/.dotfiles'
 
 export SCREENRC="$HOME/.config/.screenrc"
 
@@ -113,6 +84,7 @@ export SCREENRC="$HOME/.config/.screenrc"
 # Python: Prevent default "(venv)" text
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
+# prompt colors wrapped \[...\] so terminal can determine proper line length
 YELLOW="\[\e[38;5;214m\]"
 BURNT_ORANGE="\[\e[38;5;130m\]"
 DARK_YELLOW="\[\e[38;5;58m\]"
@@ -143,7 +115,7 @@ case $USER in
 esac
 
 set_prompt() {
-    if echo "$ORIGINAL_PATH" | grep 'cyg' >/dev/null 2>&1; then
+    if grep 'cyg' <<< "$ORIGINAL_PATH" > /dev/null 2>&1; then
         SEP_COLOR='\[\e[38;5;95m\]'
         NAME_COLOR='\[\e[38;5;61m\]'
         PATH_COLOR='\[\e[38;5;24m\]'
@@ -151,8 +123,8 @@ set_prompt() {
         SEP_COLOR='\[\e[38;5;88m\]'
     fi
 
-    if type get_git_branch check_venv >/dev/null 2>&1; then
-        export PROMPT_DIRTRIM=2
+    export PROMPT_DIRTRIM=2
+    if type get_git_branch check_venv > /dev/null 2>&1; then
         PS1="${SEP_COLOR}${FIRST_SEP} " 
         PS1="${PS1}${NAME_COLOR}\u"
         PS1="${PS1}${GREY}@"
@@ -164,9 +136,7 @@ set_prompt() {
         PS1="${PS1}\n${SEP_COLOR}${SECOND_SEP} "
         PS1="${PS1}${VENV_COLOR}\$(check_venv)"
         PS1="${PS1}${GREY}\\$ ${RESET}"
-
     else
-        export PROMPT_DIRTRIM=2
         PS1="${SEP_COLOR}${FIRST_SEP} " 
         PS1="$PS1""${NAME_COLOR}\u"
         PS1="$PS1""${GREY}@"
@@ -179,10 +149,18 @@ set_prompt() {
     fi
 }
 
-# different prompt for git bash
+# Different prompt for git bash
+# Set XDG_CONFIG_HOME/DATA on Linux if it's unset, add nvim to path if on windows
 case $OSTYPE in
     *msys*)
+        grep -qi -E 'neovim' <<< "$PATH" > /dev/null 2>&1 ||
+            export PATH="$PATH:/c/Program Files/Neovim/bin"
         { [[ -f /etc/profile.d/git-prompt.sh ]] && \. /etc/profile.d/git-prompt.sh; } || set_prompt
+        ;;
+    *linux*)
+        [[ -z "$XDG_CONFIG_HOME" ]] && export XDG_CONFIG_HOME="${HOME}/.config"
+        [[ -z "$XDG_DATA_HOME" ]] && export XDG_DATA_HOME="${HOME}/.local/share"
+        set_prompt
         ;;
     *)
         set_prompt
@@ -207,16 +185,13 @@ shopt -s checkwinsize
 shopt -s globstar
 shopt -s dotglob
 shopt -s nocaseglob
-#extdebug
-#force_fignore
 
 # god mode
 set -o vi
 
-
 ################################## System Variables ##################################
-export TZ="America/New_York"
 # export TERM=xterm-256color
+export TZ="America/New_York"
 export NOTES_HOME="/home/kolkhis/notes"
 export LC_ALL=C.UTF-8
 export EDITOR=nvim
