@@ -1,31 +1,41 @@
 #!/bin/bash
+# Install script for libssl1.1
 
-GREEN=$'\e[32m'
-RED=$'\e[31m'
-RESET=$'\e[0m'
+declare -r PACKAGE='libssl1.1_1.1.0g-2ubuntu4_amd64.deb'
+declare -r DOWNLOAD_ENDPOINT="http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/$PACKAGE"
+declare -r OUTPUT_FILE="/tmp/$PACKAGE"
+
+declare GREEN=$'\e[32m'
+declare RED=$'\e[31m'
+declare RESET=$'\e[0m'
+
+_err(){
+    printf >&2 "[ %sERROR%s ]: %s" "$RED" "$RESET" "$*"
+}
+
+_info(){
+    printf "[ INFO ]: %s\n" "$*"
+}
+
 install_libssl1.1() {
-    if ! curl -fsSL -o /tmp/libssl1.1_1.1.0g-2ubuntu4_amd64.deb \
-        http://archive.ubuntu.com/ubuntu/pool/main/o/openssl/libssl1.1_1.1.0g-2ubuntu4_amd64.deb; then
-        {
-            printf "%sDownload failed for libssl1.1%s" "${RED}" "${RESET}" >&2;
-            return 1;
-        }
-    fi
+    _info "Starting download..."
+    curl -fsSL -o "$OUTPUT_FILE" "$DOWNLOAD_ENDPOINT" > /dev/null 2>&1 || 
+        { _err "Download failed for $PACKAGE!" && return 1; }
 
-    if [[ -f /tmp/libssl1.1_1.1.0g-2ubuntu4_amd64.deb ]]; then
-        printf "Download successful, attempting to install libssl1.1\n"
-    fi
+    [[ -f "$OUTPUT_FILE" ]] || 
+        { _err "Installed file not found!" && return 1; }
 
-    if ! sudo dpkg -i /tmp/libssl1.1_1.1.0g-2ubuntu4_amd64.deb && printf "Install was successful.\n"; then
-        {
-            printf "%sThere was a problem installing libssl1.1%s" "${RED}" "${RESET}" >&2;
-            return 1;
-        }
-    fi
+    _info "Download successful, attempting to install libssl1.1"
+
+    sudo dpkg -i "$OUTPUT_FILE" || 
+        { _err "Failed to install libssl with dpkg!" && return 1; } 
+
+    _info "Install was successful."
 }
 
 if ! install_libssl1.1; then
-    printf "%sCould not install libssl1.1\n%s" "${RED}" "${RESET}"
+    err "Could not install libssl1.1!"
     exit 1
 fi
 printf "%sSuccessfully installed libssl1.1\n%s" "${GREEN}" "${RESET}"
+exit 0
