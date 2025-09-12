@@ -1,4 +1,5 @@
 #!/bin/bash
+# shellcheck disable=SC2317
 # Install script for libssl1.1
 
 declare -r PACKAGE='libssl1.1_1.1.0g-2ubuntu4_amd64.deb'
@@ -16,6 +17,16 @@ _err(){
 _info(){
     printf "[ INFO ]: %s\n" "$*"
 }
+
+cleanup() {
+    if [[ -f "$OUTPUT_FILE" ]]; then
+        rm -f "$OUTPUT_FILE" && _info "Installation files cleaned up." && return 0
+    else
+        _info "No installation files to clean up." && return 0
+    fi
+    _err "Failed to clean up installation files." && return 1
+}
+trap '_info "Cleaning up installation files..."; cleanup' EXIT ERR
 
 install_libssl1.1() {
     _info "Starting download..."
