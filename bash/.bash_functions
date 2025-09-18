@@ -129,3 +129,9 @@ tmux-breakw(){
         -t "${window_name// /-}"
 }
 
+catconf() {
+    # Cat a config file ignoring comments, INI-style headers, and empty lines
+    [[ -f "$1" ]] || { printf "No file found with the name: %s\n" "$1" && return 1; }
+    grep -Po '^\s*(?![#;]|\[").+$' "$1"
+}
+
