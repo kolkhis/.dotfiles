@@ -1,12 +1,10 @@
-#!/usr/bin/env bash
-
+#!/bin/bash
+# Wrapper script for GNU Stow. Only stow directories, not files in root dir.
 # TODO: Move away from relying on stow
 # ln -s -t ~ <dotfile>
 
-
-if [[ ! -d "$HOME/.vim" ]] || [[ ! -d "$HOME/.vim/autoload" ]]; then
-    mkdir -p "$HOME/.vim/autoload"
-fi
+[[ ! -d "$HOME/.vim/autoload" ]] && mkdir -p "$HOME/.vim/autoload"
+[[ ! -d "$HOME/.config" ]] && mkdir -p "$HOME/.config"
 
 declare -a DIRS
 
@@ -14,13 +12,12 @@ IFS=$'\n' read -r -d '' -a DIRS < <(find . -maxdepth 1 -type d)
 printf "Number of directories in DIRS: %s \n" "${#DIRS[@]}"
 
 for d in "${DIRS[@]}"; do
-    d=$(basename "$d")
-    if [[ "$d" =~ ^\./\. ]] || [[ "$d" =~ ^\. ]]; then
-        printf "Directory that starts with a dot, being ignored: %s \n" "$d"
+    d="${d##*/}"
+    [[ "$d" =~ (^\./\.|^\.) ]] && printf "Skipping hidden directory: %s\n" "$d" && continue
+    printf "Directory being stowed: %s \n" "$d"
+    stow -R "$d" || {
+        printf >&2 "[ERROR]: Unable to stow directory: %s\n" "$d"
         continue
-    else
-        printf "Directory being stowed: %s \n" "$d"
-        stow -R "$d"
-    fi
+    }
 done
 
