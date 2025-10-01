@@ -75,6 +75,7 @@ CDPATH="${CDPATH}:~/Repos/github.com/kolkhis"
 CDPATH="${CDPATH}:~/Repos/github.com/ProfessionalLinuxUsersGroup"
 CDPATH="${CDPATH}:~/notes"
 CDPATH="${CDPATH}:~/notes/linux"
+CDPATH="${CDPATH}:~/Repos/github.com"
 # export CDPATH='.:~:~/notes:~/Repos/github.com/kolkhis:~/Repos/github.com/ProfessionalLinuxUsersGroup:~/notes/linux:~/.dotfiles'
 
 export SCREENRC="$HOME/.config/.screenrc"
