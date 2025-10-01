@@ -145,6 +145,16 @@ set fdm=marker      " foldmethod
 set ls=2            " laststatus=2 - enable statusline
 set stal=1          " showtabline - 1 = Only when multiple tabs
 set icon
+set smarttab
+set expandtab
+set nosmartindent
+set breakindent
+set autoindent
+set mouse=a
+
+set autoread
+set showmatch
+set matchtime=1
 
 set path+=**
 set viminfo='20,<1000,s1000         " Don't truncate yanks/deletes
