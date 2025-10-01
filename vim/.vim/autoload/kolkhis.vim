@@ -32,32 +32,32 @@ function! kolkhis#AddUListItem(mode)
     if mode ==# 'n'
         if kolkhis#match_ul(line)
             if kolkhis#match_todo(line)
-                silent! exe 's/^\(\s*\)\?\(\* \|\d\{1,}\. \)\[.\] /\1'
+                silent! exe 's/^\(\s*\)\?\([-*] \|\d\{1,}\. \)\[.\] /\1'
             else
                 silent! exe "norm! ^2x" 
             endif
         elseif kolkhis#match_ol(line)
             if kolkhis#match_todo(line)
-                silent! exe 's/^\(\s*\)\?\(\* \|\d\{1,}\. \)\(\[.\]\) /\1* \3 '
+                silent! exe 's/^\(\s*\)\?\(\* \|\d\{1,}\. \)\(\[.\]\) /\1- \3 '
             else
-                silent! exe 's/^\(\s*\)\?\(\d\{1,}\. \)/\1* '
+                silent! exe 's/^\(\s*\)\?\(\d\{1,}\. \)/\1- '
             endif
         else
-            norm! I* 
+            norm! I- 
         endif
     else
         if kolkhis#match_todo(line)
             norm! I
-            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\(\\* \\|\\d\\{1,}\\. \\)\\[.\\] /\\1* /"
+            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\(\\* \\|\\d\\{1,}\\. \\)\\[.\\] /\\1- /"
         elseif kolkhis#match_ul(line)
             norm! I
-            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\* /\\1/"
+            silent! exe "'<,'>s/^\\(\\s*\\)\\?[-*] /\\1/"
         elseif kolkhis#match_ol(line)
             norm! I
-            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\d\\. /\\1* /"
+            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\d\\. /\\1- /"
         else
             norm! I
-            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\(\\w\\)/\\1* \\2/"
+            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\(\\w\\)/\\1- \\2/"
         endif
     endif
 endfunction
@@ -108,9 +108,9 @@ function! kolkhis#AddMarkdownCheckbox(mode)
     endif
     if a:mode ==# 'n'
         if kolkhis#match_todo(line)
-            silent! exe 's/^\(\s*\)\?\(\* \|\d\{1,}\. \)\[.\] /\1\2/'
+            silent! exe 's/^\(\s*\)\?\([-*] \|\d\{1,}\. \)\[.\] /\1\2/'
         elseif kolkhis#match_ul(line)
-            silent! exe 's/^\(\s*\)\?\(\*\) /\1\2 [ ] '
+            silent! exe 's/^\(\s*\)\?\(\[-*]\) /\1\2 [ ] '
         elseif kolkhis#match_ol(line)
             silent! exe 's/^\(\s*\)\?\(\d\{1,}\.\) /\1\2 [ ] '
         else
@@ -122,7 +122,7 @@ function! kolkhis#AddMarkdownCheckbox(mode)
             silent! exe "'<,'>s/^\\(\\s*\\)\\?\\(\\* \\|\\d\\{1,}\\. \\)\\[.\\] /\\1\\2/"
         elseif kolkhis#match_ul(line)
             norm! I
-            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\(\\*\\) /\\1\\2 [ ] "
+            silent! exe "'<,'>s/^\\(\\s*\\)\\?\\([-*]\\) /\\1\\2 [ ] "
         elseif kolkhis#match_ol(line)
             norm! I
             silent! exe "'<,'>s/^\\(\\s*\\)\\?\\(\\d\\{1,}\\.\\) /\\1\\2 [ ] "
@@ -138,11 +138,11 @@ function! kolkhis#match_ol(line)
 endfunction
 
 function! kolkhis#match_ul(line)
-    return match(a:line, '^\(\s*\)\?\* ') != -1
+    return match(a:line, '^\(\s*\)\?[-*] ') != -1
 endfunction
 
 function! kolkhis#match_todo(line)
-    return match(a:line, '^\(\s*\)\?\(\*\|\d\{1,}\.\) \(\[.\]\)') != -1
+    return match(a:line, '^\(\s*\)\?\([-*]\|\d\{1,}\.\) \(\[.\]\)') != -1
 endfunction
 
 """""""""""""""""" Netrw """""""""""""""""
