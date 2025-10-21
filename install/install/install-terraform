@@ -3,6 +3,7 @@
 debian-install(){
     local repo_endpoint="https://apt.releases.hashicorp.com"
     local gpg_keyfile="/usr/share/keyrings/hashicorp-archive-keyring.gpg"
+    printf "Performing Debian-based installation...\n"
 
     # Add gpg key and repo
     wget -O- "${repo_endpoint}/gpg" | sudo gpg --dearmor -o "$gpg_keyfile"
@@ -21,11 +22,14 @@ debian-install(){
 }
 
 redhat-install(){
+    printf "Performing RedHat-based installation...\n"
     if type dnf > /dev/null 2>&1; then
+        printf "Using dnf to install Terraform...\n"
         rpm -qa | grep -qi 'dnf-plugins-core' || sudo dnf install -y dnf-plugins-core
         dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo || return 1
         sudo dnf install -y terraform || return 1
     elif type yum > /dev/null 2>&1; then
+        printf "Using yum to install Terraform...\n"
         rpm -qa | grep -qi 'yum-utils' || sudo yum install -y yum-utils
         sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo || return 1
         sudo yum install -y terraform || return 1
@@ -47,3 +51,5 @@ if type rpm > /dev/null 2>&1; then
         exit 1
     }
 fi
+
+printf "Installation successful.\n"
