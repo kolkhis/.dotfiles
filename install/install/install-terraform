@@ -1,23 +1,27 @@
 #!/bin/bash
 
+if [[ $EUID -ne 0 ]]; then
+    printf >&2 "[ERROR]: Run as root.\n"
+fi
+
 debian-install(){
     local repo_endpoint="https://apt.releases.hashicorp.com"
     local gpg_keyfile="/usr/share/keyrings/hashicorp-archive-keyring.gpg"
     printf "Performing Debian-based installation...\n"
 
     # Add gpg key and repo
-    wget -O- "${repo_endpoint}/gpg" | sudo gpg --dearmor -o "$gpg_keyfile"
+    wget -O- "${repo_endpoint}/gpg" | gpg --dearmor -o "$gpg_keyfile"
     printf "deb [arch=%s signed-by=%s] %s %s main" \
         "$(dpkg --print-architecture)" \
         "$gpg_keyfile" \
         "$repo_endpoint" \
         "$(grep -oP "(?<=UBUNTU_CODENAME=).*" /etc/*release || lsb_release -cs)" |
-        sudo tee /etc/apt/sources.list.d/hashicorp.list || {
+        tee /etc/apt/sources.list.d/hashicorp.list || {
             printf >&2 "[ERROR]: Failed to add Hashicorp repository.\n"
             return 1
         }
-    sudo apt-get update || return 1
-    sudo apt-get install -y terraform || return 1
+    apt-get update || return 1
+    apt-get install -y terraform || return 1
     return 0
 }
 
@@ -25,14 +29,14 @@ redhat-install(){
     printf "Performing RedHat-based installation...\n"
     if type dnf > /dev/null 2>&1; then
         printf "Using dnf to install Terraform...\n"
-        rpm -qa | grep -qi 'dnf-plugins-core' || sudo dnf install -y dnf-plugins-core
+        rpm -qa | grep -qi 'dnf-plugins-core' || dnf install -y dnf-plugins-core
         dnf config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo || return 1
-        sudo dnf install -y terraform || return 1
+        dnf install -y terraform || return 1
     elif type yum > /dev/null 2>&1; then
         printf "Using yum to install Terraform...\n"
-        rpm -qa | grep -qi 'yum-utils' || sudo yum install -y yum-utils
-        sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo || return 1
-        sudo yum install -y terraform || return 1
+        rpm -qa | grep -qi 'yum-utils' || yum install -y yum-utils
+        yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo || return 1
+        yum install -y terraform || return 1
     fi
     return 0
 }
