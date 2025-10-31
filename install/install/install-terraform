@@ -56,4 +56,11 @@ if type rpm > /dev/null 2>&1; then
     }
 fi
 
-printf "Installation successful.\n"
+
+if terraform --version > /dev/null 2>&1; then
+    printf "[\033[32mSUCCESS\033[0m]: %s has been successfully installed.\n" \
+        "$(terraform --version | head -n 1)"
+else
+    printf >&2 '[ERROR]: Could not validate Terraform installation.\n'
+fi
+
