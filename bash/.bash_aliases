@@ -37,23 +37,18 @@ alias f='fzf'
 
 # Navigation
 alias dots="cd ~/.dotfiles/"
-alias aoc="cd ~/Repos/github.com/kolkhis/aoc-2023/"
-alias sb="cd ~/Repos/github.com/kolkhis/scripts-playbooks"
+alias lu="cd ~/Repos/github.com/kolkhis/lab-utils"
 alias nv="cd ~/.dotfiles/nvim/.config/nvim/"
 alias v="cd ~/.dotfiles/vim"
-alias boost="cd ~/notes/skilstak/" 
 alias rp="cd ~/Repos/github.com/kolkhis/"
 alias s="cd ~/.dotfiles/scripts/.local/bin/"
 alias n="cd ~/notes/"
-alias ta="cd ~/Repos/github.com/kolkhis/taggart"
-alias tw="cd ~/Repos/github.com/kolkhis/twitch_chat_bot/"
-alias gl="cd ~/Repos/github.com/kolkhis/go-fundamentals/"
 alias db="cd ~/Repos/github.com/kolkhis/discord_bot/"
 alias tb="cd ~/Repos/github.com/kolkhis/twitch_chat_bot/"
-alias i3c="vim ~/.dotfiles/i3/.config/i3/config"
+alias bsg='cd ~/Repos/github.com/kolkhis/lab-utils/prolug/bash-sg/'
 
-case $(hostname) in
-    ("D01")
+case "$OSTYPE" in
+    (msys)
         alias nv="cd ~/AppData/Local/nvim";
         ;;
     (*)
