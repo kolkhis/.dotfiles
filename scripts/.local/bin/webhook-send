@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -r DISCORD_WEBHOOK_URL="${DISCORD_WEBHOOK_URL:?Discord webhook URL must be set as an environment variable}"
+declare DISCORD_WEBHOOK_URL="${DISCORD_WEBHOOK_URL:?Discord webhook URL must be set as an environment variable}"
 declare MESSAGE
 declare WEBHOOK_URL_FILE
 
@@ -21,6 +21,10 @@ while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
     esac
     :
 done
+
+if [[ -f $WEBHOOK_URL_FILE ]]; then
+    DISCORD_WEBHOOK_URL="$(head -n 1 "$WEBHOOK_URL_FILE")"
+fi
 
 report-webhook(){
     local PAYLOAD='{"content":"'$MESSAGE'"}'
