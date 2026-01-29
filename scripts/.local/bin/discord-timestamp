@@ -1,6 +1,16 @@
 #!/bin/bash
 
 # TODO: Accept only date or only time
+#
+# TODO(feat): Add support for formatting:
+#   <t:unix_timestamp:t> - short time (e.g. 9:41 PM).
+#   <t:unix_timestamp:T> - long time (e.g. 9:41:30 PM).
+#   <t:unix_timestamp:d> - short date (e.g. 01/29/2026).
+#   <t:unix_timestamp:D> - long date (e.g. 29 January 2026).
+#   <t:unix_timestamp:f> - short date + time (e.g. `29 January 2026 9:41 PM`).
+#   <t:unix_timestamp:F> - full date + weekday + time.
+#   <t:unix_timestamp:R> - relative time (e.g. `in 2 hours`, `3 days ago`).
+
 
 declare DATE
 declare TIME
