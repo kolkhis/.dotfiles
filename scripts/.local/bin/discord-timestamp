@@ -21,28 +21,35 @@ CURRENT_DATE=$(date '+%Y-%m-%d %H:%M')  # POSIX-friendly
 
 printf "Current date: %s\n" "$CURRENT_DATE"
 
+usage(){
+    cat <<- EOF
+	Usage: 
+	    discord-timestamp [OPTIONS] DATE TIME
+
+	Options: 
+	    -h, --help
+	        Display this help text and exit.
+
+	    -f, --format <CODE>
+	        Displays the UNIX timestamp with the format code provided at the end.
+	        Available codes:
+
+	        Code	Format
+	        t	    Short time (9:00 AM)
+	        T	    Long time (9:00:00 AM)
+	        d	    Short date (08/09/2024)
+	        D	    Long date (August 9, 2024)
+	        f	    Short date/time (August 9, 2024 9:00 AM)
+	        F	    Long date/time (Friday, August 9, 2024 9:00 AM)
+	        R	    Relative (in 2 days)
+	EOF
+
+}
+
 while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
     case $1 in
         -h|--help)
-            cat <<- EOF
-            Usage: 
-                discord-timestamp [OPTIONS] DATE TIME
-
-            Options: 
-                -f, --format <CODE>
-                    Displays the UNIX timestamp with the format code provided at the end.
-                    Available codes:
-
-                    Code	Format
-                    t	    Short time (9:00 AM)
-                    T	    Long time (9:00:00 AM)
-                    d	    Short date (08/09/2024)
-                    D	    Long date (August 9, 2024)
-                    f	    Short date/time (August 9, 2024 9:00 AM)
-                    F	    Long date/time (Friday, August 9, 2024 9:00 AM)
-                    R	    Relative (in 2 days)
-			EOF
-            shift;
+            usage
             exit 0;
             ;;
 
@@ -63,7 +70,8 @@ while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
             ;;
 
         *)
-            printf "Unknown argument: %s\nUse --help for usage.\n" "$1"
+            printf "Unknown argument: %s\n" "$1"
+            usage
             exit 1
             ;;
     esac
