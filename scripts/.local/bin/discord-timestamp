@@ -95,5 +95,9 @@ EPOCH=$(date -d "${INPUT}" +%s 2>/dev/null)
     exit 1
 }
 
-printf "<t:%s:%s>\n" "${EPOCH}" "${FORMAT:-f}"
+printf -v timestamp "<t:%s:%s>\n" "${EPOCH}" "${FORMAT:-f}"
+
+printf "\n\nTimestamp:\n%s\n" "$timestamp"
+
+
 
