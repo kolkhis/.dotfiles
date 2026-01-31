@@ -26,6 +26,7 @@ usage(){
 	Usage: 
 	    discord-timestamp [OPTIONS] DATE TIME
 
+
 	Options: 
 	    -h, --help
 	        Display this help text and exit.
@@ -33,15 +34,18 @@ usage(){
 	    -f, --format <CODE>
 	        Displays the UNIX timestamp with the format code provided at the end.
 	        Available codes:
-
-	        Code	Format
-	        t	    Short time (9:00 AM)
-	        T	    Long time (9:00:00 AM)
-	        d	    Short date (08/09/2024)
-	        D	    Long date (August 9, 2024)
-	        f	    Short date/time (August 9, 2024 9:00 AM)
-	        F	    Long date/time (Friday, August 9, 2024 9:00 AM)
-	        R	    Relative (in 2 days)
+                Code	Format
+                t	    Short time (9:00 AM)
+                T	    Long time (9:00:00 AM)
+                d	    Short date (08/09/2024)
+                D	    Long date (August 9, 2024)
+                f	    Short date/time (August 9, 2024 9:00 AM)
+                F	    Long date/time (Friday, August 9, 2024 9:00 AM)
+                R	    Relative (in 2 days)
+    Notes:
+        Note that [OPTIONS] must come before the date and time.  
+        DATE must be formatted as YYYY-MM-DD  
+        TIME must be formatted as HH:MM  
 	EOF
 
 }
@@ -82,7 +86,6 @@ done
 [[ -n $1 && -n $2 ]] &&
     DATE=$1 && TIME=$2 &&
     INPUT=$(perl -pe 's/([-\d]+)\s+([:\d]+).*/\1 \2/' <<< "$DATE $TIME")
-        # perl -p -e 's/(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}).*/\1 \2/');
 
 [[ -z $INPUT ]] &&
     printf "No input provided. Using the current date/time (%s).\n" "${INPUT:=$CURRENT_DATE}"
