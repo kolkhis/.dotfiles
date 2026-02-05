@@ -1,4 +1,7 @@
 #!/bin/bash
+# Basic script used to send a payload to a webhook URL.  
+# Use `-m` to specify message, `-u` to specify a webhook URL, or
+# use `-f` to specify a file containing the webhook URL. 
 
 declare MESSAGE
 declare WEBHOOK_URL
@@ -7,11 +10,21 @@ declare WEBHOOK_URL_FILE
 while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
     case "$1" in
         -m|--message)
-            [[ -n $2 && ! $2 =~ ^- ]] && shift && MESSAGE="$1"
+            if [[ -n $2 && ! $2 =~ ^- ]]; then
+                shift && MESSAGE="$1"
+            else
+                printf >&2 '[ERROR]: Invalid argument to -m/--message: %s\n' "$2"
+                exit 1
+            fi
             shift
             ;;
         -f|--webhook-url-file)
-            [[ -n $2 && ! $2 =~ ^- ]] && shift && WEBHOOK_URL_FILE="$1"
+            if [[ -n $2 && ! $2 =~ ^- ]]; then
+                shift && WEBHOOK_URL_FILE="$1"
+            else
+                printf >&2 '[ERROR]: Invalid argument to -f/--webhook-url-file: %s\n' "$2"
+                exit 1
+            fi
             if [[ -f $WEBHOOK_URL_FILE ]]; then
                 WEBHOOK_URL="$(head -n 1 "$WEBHOOK_URL_FILE")"
             else
@@ -20,16 +33,28 @@ while [[ -n $1 && $1 =~ ^- && ! $1 == '--' ]]; do
             fi
             shift
             ;;
+        -u|--url)
+            if [[ -n $2 && ! $2 =~ ^- ]]; then
+                shift && WEBHOOK_URL="$1"
+            else
+                printf >&2 '[ERROR]: Invalid argument to -u/--url: %s\n' "$2"
+                exit 1
+            fi
+            shift;
+            ;;
         *) 
             printf >&2 '[ERROR]: Unknown argument: %s\n' "$1"
             exit 1
             ;;
     esac
-    :
 done
+
+[[ $1 == '--' ]] && shift
 
 report-webhook(){
     local PAYLOAD='{"content":"'$MESSAGE'"}'
+
+    printf 'Sending payload to %s:\n%s\n' "$WEBHOOK_URL" "$PAYLOAD"
 
     curl -X POST \
         -H "Content-Type: application/json" \
@@ -37,10 +62,15 @@ report-webhook(){
             printf >&2 '[ERROR]: Failed to send message to webhook!\n'
             return 1
         }
+    printf 'Successfully sent payload.\n'
+    return 0
 }
 
 if [[ -n $MESSAGE && -n $WEBHOOK_URL ]]; then
-    report-webhook
+    report-webhook || {
+        printf >&2 '[ERROR]: Failed to send payload to webhook\n'
+        exit 1
+    }
 else
     printf >&2 '[ERROR]: Missing message or webhook URL!\n'
     exit 1
