@@ -124,7 +124,6 @@ set_prompt() {
         SEP_COLOR='\[\e[38;5;88m\]'
     fi
 
-    export PROMPT_DIRTRIM=2
     if type get_git_branch check_venv > /dev/null 2>&1; then
         PS1="${SEP_COLOR}${FIRST_SEP} " 
         PS1="${PS1}${NAME_COLOR}\u"
@@ -167,6 +166,7 @@ case $OSTYPE in
         set_prompt
         ;;
 esac
+export PROMPT_DIRTRIM=2
 export PS1
 export PS2="${GREY}~>${RESET} "
 
@@ -179,7 +179,7 @@ HISTFILESIZE=2000
 # append to the history file, don't overwrite it
 shopt -s histappend
 
-# check the window size after each command, update the values of LINES and COLUMNS.
+# check the window size after each command, update $LINES and $COLUMNS
 shopt -s checkwinsize
 
 # Recursively expand directories with "**"
@@ -191,13 +191,10 @@ shopt -s nocaseglob
 set -o vi
 
 ################################## System Variables ##################################
-# export TERM=xterm-256color
 export TZ="America/New_York"
 export NOTES_HOME="/home/kolkhis/notes"
 export LC_ALL=C.UTF-8
-export EDITOR=nvim
-export VISUAL=nvim
-export SUDO_EDITOR=nvim
+export EDITOR=nvim VISUAL=nvim SUDO_EDITOR=nvim
 export PATH=~/bin:$PATH
 export COLUMNS=120 LINES=30
 GPG_TTY=$(tty)
@@ -209,4 +206,5 @@ export GO111MODULE=on
 
 # Make sure cursor is a block
 printf "\x1b[\x30 q"
+
 
