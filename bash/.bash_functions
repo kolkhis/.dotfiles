@@ -105,9 +105,16 @@ read_hide() {
 m() {
     if [[ -z "$1" ]]; then
         nvim -c "tab Man bash" -c 'normal gt' -c "wincmd q"
+        return 0
     elif [[ -n "$1" ]]; then
+        if [[ "$1" =~ ^[[:digit:]]$ && -n "$2" ]]; then
+             nvim -c "tab Man $1 $2" -c 'normal gt' -c "wincmd q"   
+             return 0
+        fi
         nvim -c "tab Man $1" -c "normal gt" -c "wincmd q"
+        return 0
     fi
+    return 1
 }
 complete -A command m
 
