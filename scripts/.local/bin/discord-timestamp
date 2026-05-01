@@ -23,7 +23,7 @@ usage(){
 
 	    -f, --format <CODE>
 	        Displays the UNIX timestamp with the format code provided at the end.
-	        Available codes:
+	        Available format codes:
                 Code	Format
                 t	    Short time (9:00 AM)
                 T	    Long time (9:00:00 AM)
@@ -85,8 +85,6 @@ if [[ -z $INPUT ]]; then
     exit 1
 fi
 
-# printf "Calculating Discord timestamp for: %s\n" "${INPUT}"
-
 EPOCH="$(date -d "${INPUT}" +%s 2>/dev/null)"
 [[ -z $EPOCH ]] && {
     printf "[ERROR]: Failed to calculate the epoch time for the given date.\n"
@@ -95,7 +93,6 @@ EPOCH="$(date -d "${INPUT}" +%s 2>/dev/null)"
     exit 1
 }
 
-# Output timestamp
 printf "<t:%s:%s>\n" "${EPOCH}" "${FORMAT:-f}"
 
 
