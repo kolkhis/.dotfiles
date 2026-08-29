@@ -36,6 +36,8 @@ alias path='printf "${PATH//:/\\n}\n"'
 alias f='fzf'
 
 # Navigation
+alias repos="cd ~/Repos/github.com/kolkhis/"
+alias dat="cd ~/Repos/github.com/kolkhis/discord-attendance-tracker"
 alias dots="cd ~/.dotfiles/"
 alias lu="cd ~/Repos/github.com/kolkhis/lab-utils"
 alias nv="cd ~/.dotfiles/nvim/.config/nvim/"
