@@ -102,6 +102,27 @@ read_hide() {
     fi
 }
 
+man() {
+    if type nvim > /dev/null 2>&1; then
+        if [[ -z "$1" ]]; then
+            nvim -c "tab Man bash" -c 'normal gt' -c "wincmd q"
+            return 0
+        elif [[ -n "$1" ]]; then
+            if [[ "$1" =~ ^([[:digit:]])$ && -n "$2" ]]; then
+                 nvim -c "tab Man $1 $2" -c 'normal gt' -c "wincmd q"   
+                 return 0
+            fi
+            nvim -c "tab Man $1" -c "normal gt" -c "wincmd q"
+            return 0
+        fi
+    else
+        /usr/bin/man "$@"
+        return 0
+    fi
+    return 1
+}
+complete -A command man
+
 m() {
     if [[ -z "$1" ]]; then
         nvim -c "tab Man bash" -c 'normal gt' -c "wincmd q"
@@ -141,4 +162,14 @@ catconf() {
     [[ -f "$1" ]] || { printf "No file found with the name: %s\n" "$1" && return 1; }
     grep -Po '^\s*(?![#;]|\[").+$' "$1"
 }
+
+
+
+setlayout(){
+    local style='dc06,209x55,0,0{114x55,0,0,7,94x55,115,0[94x27,115,0,8,94x27,115,28,9]}'
+    if tmux has-session; then
+        tmux select-layout "$style"
+    fi
+}
+
 
