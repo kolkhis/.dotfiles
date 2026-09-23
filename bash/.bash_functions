@@ -165,8 +165,14 @@ catconf() {
 
 
 
-setlayout(){
+tmuxlayout(){
     local style='dc06,209x55,0,0{114x55,0,0,7,94x55,115,0[94x27,115,0,8,94x27,115,28,9]}'
+    local -i pane_count
+    pane_count="$(tmux display-message -p '#{window_panes}')"
+    if [[ $pane_count -eq 1 ]]; then
+        tmux splitw -h
+        tmux splitw
+    fi
     if tmux has-session; then
         tmux select-layout "$style"
     fi
